@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIInsight Travel Agency</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: url('https://www.example.com/welcome-background.jpg') no-repeat center center/cover; /* Replace with your desired background image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-section h1 {
+            color: white;
+            font-size: 3em;
+            text-align: center;
+        }
+
+        nav {
+            background: #333;
+            color: white;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .about-section {
+            background: url('file:///C:/Users/pc/Downloads/plane.png') no-repeat center center/cover;
+            height: 100vh;
+        }
+
+        .destinations-section {
+            background: #fff;
+            min-height: 100vh;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+        }
+
+        .experience-section {
+            background: #f9f9f9;
+        }
+
+        .contact-section {
+            background: #fff;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .plane {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: url('file:///C:/Users/pc/Downloads/plane.png') no-repeat center center/cover;
+            transform: translateY(0);
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <header>
+        <div class="hero-section">
+            <h1>Welcome to AIInsight</h1>
+        </div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#destinations">Destinations</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+        </ul>
+    </nav>
+    
+    <section id="about" class="about-section">
+        <div class="plane" id="plane"></div>
+        <h2>About Us</h2>
+        <p>Welcome to AIInsight, your trusted partner in discovering and planning amazing travel experiences. Our mission is to make your travel dreams a reality with personalized services and expert guidance.</p>
+    </section>
+    
+    <section id="destinations" class="destinations-section">
+        <h2>Destinations</h2>
+        <div id="map"></div>
+    </section>
+    
+    <section id="experience" class="experience-section">
+        <h2>Experience</h2>
+        <p>Our clients love us! Check out their reviews and testimonials below.</p>
+        <!-- Add testimonials and reviews here -->
+    </section>
+    
+    <section id="contact" class="contact-section">
+        <h2>Contact Us</h2>
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+    
+    <footer>
+        <p>&copy; 2024 AIInsight Travel Agency. All rights reserved.</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Scroll-based plane movement
+        document.addEventListener("scroll", function () {
+            const plane = document.getElementById("plane");
+            const aboutSection = document.getElementById("about");
+            const destinationsSection = document.getElementById("destinations");
+            const aboutSectionTop = aboutSection.offsetTop;
+            const destinationsSectionTop = destinationsSection.offsetTop;
+            const scrollY = window.scrollY;
+
+            if (scrollY >= aboutSectionTop && scrollY <= destinationsSectionTop) {
+                const progress = (scrollY - aboutSectionTop) / (destinationsSectionTop - aboutSectionTop);
+                plane.style.transform = `translateY(${progress * 100}%)`;
+            }
+        });
+
+        // Initialize the map
+        var map = L.map('map').setView([20, 0], 2); // Center map on world view
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add markers to the map
+        var locations = [
+            { coords: [40.7128, -74.0060], name: "New York", popup: "<b>Welcome to New York!</b><br>The city that never sleeps." },
+            { coords: [37.5665, 126.9780], name: "Seoul", popup: "<b>Welcome to Seoul!</b><br>The heart of South Korea." },
+            { coords: [35.6895, 139.6917], name: "Tokyo", popup: "<b>Welcome to Tokyo!</b><br>The bustling capital of Japan." },
+            { coords: [31.6295, -7.9811], name: "Marrakech", popup: "<b>Welcome to Marrakech!</b><br>The vibrant city of Morocco." },
+            { coords: [48.8566, 2.3522], name: "Paris", popup: "<b>Welcome to Paris!</b><br>The city of lights." },
+            { coords: [51.5074, -0.1278], name: "London", popup: "<b>Welcome to London!</b><br>The capital of England." },
+            { coords: [34.0522, -118.2437], name: "Los Angeles", popup: "<b>Welcome to Los Angeles!</b><br>The city of angels." },
+            { coords: [55.7558, 37.6173], name: "Moscow", popup: "<b>Welcome to Moscow!</b><br>The capital of Russia." },
+            { coords: [28.6139, 77.2090], name: "New Delhi", popup: "<b>Welcome to New Delhi!</b><br>The capital of India." },
+            { coords: [39.9042, 116.4074], name: "Beijing", popup: "<b>Welcome to Beijing!</b><br>The capital of China." },
+            { coords: [-33.8688, 151.2093], name: "Sydney", popup: "<b>Welcome to Sydney!</b><br>The largest city in Australia." },
+            { coords: [41.9028, 12.4964], name: "Rome", popup: "<b>Welcome to Rome!</b><br>The capital of Italy." },
+            { coords: [19.4326, -99.1332], name: "Mexico City", popup: "<b>Welcome to Mexico City!</b><br>The capital of Mexico." },
+            { coords: [1.3521, 103.8198], name: "Singapore", popup: "<b>Welcome to Singapore!</b><br>The Lion City." },
+            { coords: [13.7563, 100.5018], name: "Bangkok", popup: "<b>Welcome to Bangkok!</b><br>The vibrant capital of Thailand." },
+            { coords: [35.6762, 139.6503], name: "Tokyo", popup: "<b>Welcome to Tokyo!</b><br>The bustling capital of Japan." }
+        ];
+
+        locations.forEach(function(location) {
+            var marker = L.marker(location.coords).addTo(map);
+            marker.bindPopup(location.popup);
+        });
+
+        // Handle form submission
+        document.querySelector("form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const message = document.getElementById("message").value;
+            alert(`Thank you, ${name}! We have received your message: "${message}". We will contact you at ${email} shortly.`);
+        });
+    </script>
+</body>
+</html>
